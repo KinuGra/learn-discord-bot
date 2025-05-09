@@ -1,0 +1,4 @@
+.env*
+
+# 仮想環境名がmyenvの場合
+/myenv
