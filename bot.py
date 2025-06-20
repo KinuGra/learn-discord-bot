@@ -9,7 +9,7 @@ intents.message_content = True # メッセージの内容を取得する権限
 
 # Botをインスタンス化
 bot = commands.Bot(
-    command_prefix="$", # $コマンド名 でコマンドを実行できるようになる
+    command_prefix="&", # &コマンド名 でコマンドを実行できるようになる
     case_insensitive=True, # コマンドの大文字小文字を区別しない（$helloも$Helloも同じ）
     intents=intents # 権限を設定
 )
@@ -18,17 +18,30 @@ bot = commands.Bot(
 async def on_ready():
     print("Bot is ready!")
 
-@bot.event
-async def on_message(message: discord.Message):
-    """メッセージをおうむ返しする処理"""
+@bot.command(
+    name="hello", # コマンドの名前, 設定しない場合は関数名
+    aliases=["hi", "hey"] # &hiでも&heyでも反応するようになる
+)
+async def hello(ctx: commands.Context) -> None:
+    """helloと返すコマンド"""
+    await ctx.send(f"Hello {ctx.author.name}")
 
-    if message.author.bot: # ボットのメッセージは無視
-        return
-
-    await message.reply(message.content)
+@bot.command()
+async def add(ctx: commands.Context, a: int, b:int) -> None:
+    """足し算をするコマンド"""
+    await ctx.send(a+b)
 
 # 環境変数の読み込み
 load_dotenv()
 TOKEN = os.getenv("TOKEN", "環境変数が設定されていません")
 
 bot.run(TOKEN)
+
+# @bot.event
+# async def on_message(message: discord.Message):
+#     """メッセージをおうむ返しする処理"""
+
+#     if message.author.bot: # ボットのメッセージは無視
+#         return
+
+#     await message.reply(message.content)
